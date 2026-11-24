@@ -1,1 +1,1823 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>برمجية سكراتش - المهارات الرقمية الصف الثامن | مدرسة ذكور وادي السير</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Cairo & Tajawal -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        scratch: {
+                            orange: '#FFAB19',
+                            yellow: '#FFBF00',
+                            blue: '#4C97FF',
+                            purple: '#9966FF',
+                            pink: '#CF63CF',
+                            green: '#5CB85C',
+                            cyan: '#5CB1D6',
+                            dark: '#1E293B',
+                            darker: '#0F172A',
+                        }
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                        tajawal: ['Tajawal', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Cairo', 'Tajawal', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            user-select: none;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4c97ff;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ffab19;
+        }
+        /* Scratch Block Shapes */
+        .scratch-block {
+            position: relative;
+            border-radius: 6px;
+            padding: 8px 14px;
+            color: white;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            transition: all 0.2s ease;
+        }
+        .scratch-block:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.08);
+        }
+        /* Scratch Block Color Classes */
+        .block-motion { background-color: #4C97FF; border-left: 4px solid #2B75E0; }
+        .block-looks { background-color: #9966FF; border-left: 4px solid #7744DD; }
+        .block-sound { background-color: #CF63CF; border-left: 4px solid #AD41AD; }
+        .block-events { background-color: #FFBF00; border-left: 4px solid #DBA000; color: #1e293b; }
+        .block-control { background-color: #FFAB19; border-left: 4px solid #D98900; }
+        .block-sensing { background-color: #5CB1D6; border-left: 4px solid #3A8FB4; }
+        .block-operators { background-color: #59C059; border-left: 4px solid #379E37; }
+        .block-variables { background-color: #FF8C1A; border-left: 4px solid #D66A00; }
+        
+        /* Pulse Animation */
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 15px rgba(255, 171, 25, 0.4); }
+            50% { box-shadow: 0 0 25px rgba(255, 171, 25, 0.8); }
+        }
+        .glow-effect {
+            animation: pulse-glow 2.5s infinite;
+        }
+        /* Grid Canvas pattern */
+        .bg-grid-pattern {
+            background-size: 20px 20px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+        }
+        /* Speech bubble */
+        .speech-bubble {
+            position: relative;
+            background: #ffffff;
+            border-radius: .4em;
+            color: #1e293b;
+            font-weight: bold;
+            padding: 8px 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20%;
+            width: 0;
+            height: 0;
+            border: 10px solid transparent;
+            border-top-color: #ffffff;
+            border-bottom: 0;
+            margin-left: -5px;
+            margin-bottom: -10px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between bg-slate-950 text-slate-100 overflow-x-hidden">
 
+    <!-- HEADER SECTION -->
+    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-40 shadow-xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Top Branding & School Title -->
+            <div class="py-3 border-b border-slate-800/80 flex flex-wrap justify-between items-center gap-3">
+                <div class="flex items-center space-x-3 space-x-reverse">
+                    <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-orange-500 to-amber-400 flex items-center justify-center text-slate-950 font-black text-2xl shadow-lg shadow-orange-500/30">
+                        <i class="fa-solid fa-puzzle-piece"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="bg-blue-600/30 text-blue-400 text-xs px-2 py-0.5 rounded-full border border-blue-500/30 font-semibold">وكالة الغوث الدولية - الأنروا</span>
+                            <span class="text-xs text-slate-400">الفصل الدراسي الأول</span>
+                        </div>
+                        <h1 class="text-lg sm:text-xl font-black text-slate-50 tracking-wide flex items-center gap-2">
+                            <span>مدرسة ذكور وادي السير الإعدادية</span>
+                            <span class="text-xs text-amber-400 bg-amber-950/60 border border-amber-500/40 px-2 py-0.5 rounded">الصف الثامن</span>
+                        </h1>
+                    </div>
+                </div>
+
+                <!-- XP & Progress Counter -->
+                <div class="flex items-center gap-3 bg-slate-800/80 p-1.5 px-3 rounded-xl border border-slate-700">
+                    <div class="flex items-center gap-2">
+                        <div class="w-9 h-9 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 font-bold">
+                            <i class="fa-solid fa-star text-lg animate-bounce"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs text-slate-400">نقاط الخبرة (XP)</div>
+                            <div class="font-extrabold text-amber-400 text-sm sm:text-base flex items-center gap-1">
+                                <span id="xp-counter">0</span> <span class="text-xs text-slate-400">XP</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="h-8 w-px bg-slate-700"></div>
+
+                    <!-- Level Badge -->
+                    <div class="text-center px-1">
+                        <div class="text-xs text-slate-400">المستوى</div>
+                        <div id="user-level" class="text-xs font-bold bg-purple-900/60 text-purple-300 border border-purple-500/30 px-2 py-0.5 rounded-full">
+                            مبرمج مبتدئ 1
+                        </div>
+                    </div>
+
+                    <div class="h-8 w-px bg-slate-700"></div>
+
+                    <!-- Audio Controls & GitHub Pages Modal Button -->
+                    <div class="flex items-center gap-1.5">
+                        <button id="sound-toggle-btn" title="كتم/تشغيل الصوت" class="w-9 h-9 rounded-lg bg-slate-700/60 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition">
+                            <i class="fa-solid fa-volume-high text-sm"></i>
+                        </button>
+                        <button onclick="openGitHubModal()" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-md shadow-emerald-900/30 transition">
+                            <i class="fa-brands fa-github text-sm"></i>
+                            <span class="hidden sm:inline">نشر على GitHub</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Unit Title Banner & Main Navigation Tabs -->
+            <div class="py-2 flex flex-col md:flex-row justify-between items-center gap-3">
+                <div class="flex items-center gap-2">
+                    <span class="text-xl">🐱</span>
+                    <h2 class="text-sm sm:text-base font-bold text-amber-300">
+                        الوحدة الثانية: الخوارزميات والبرمجة - برمجية سكراتش (Scratch 3.0)
+                    </h2>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <nav class="flex items-center gap-1 sm:gap-2 overflow-x-auto w-full md:w-auto pb-1 md:pb-0 text-xs sm:text-sm">
+                    <button onclick="switchTab('lessons')" id="tab-btn-lessons" class="nav-tab active-tab bg-slate-800 text-amber-400 border border-amber-500/40 px-3.5 py-2 rounded-xl font-bold flex items-center gap-2 whitespace-nowrap transition">
+                        <i class="fa-solid fa-map-location-dot"></i>
+                        <span>خريطة المهمات</span>
+                    </button>
+                    <button onclick="switchTab('explorer')" id="tab-btn-explorer" class="nav-tab text-slate-400 hover:text-slate-200 px-3.5 py-2 rounded-xl font-bold flex items-center gap-2 whitespace-nowrap transition">
+                        <i class="fa-solid fa-desktop"></i>
+                        <span>مختبر سكراتش</span>
+                    </button>
+                    <button onclick="switchTab('challenge')" id="tab-btn-challenge" class="nav-tab text-slate-400 hover:text-slate-200 px-3.5 py-2 rounded-xl font-bold flex items-center gap-2 whitespace-nowrap transition">
+                        <i class="fa-solid fa-gamepad"></i>
+                        <span>تحدي اللبنات</span>
+                    </button>
+                    <button onclick="switchTab('quiz')" id="tab-btn-quiz" class="nav-tab text-slate-400 hover:text-slate-200 px-3.5 py-2 rounded-xl font-bold flex items-center gap-2 whitespace-nowrap transition">
+                        <i class="fa-solid fa-clipboard-question"></i>
+                        <span>بنك الأسئلة والتقويم</span>
+                    </button>
+                    <button onclick="switchTab('certificate')" id="tab-btn-certificate" class="nav-tab text-slate-400 hover:text-slate-200 px-3.5 py-2 rounded-xl font-bold flex items-center gap-2 whitespace-nowrap transition">
+                        <i class="fa-solid fa-award"></i>
+                        <span>الشهادة والإنجازات</span>
+                    </button>
+                </nav>
+            </div>
+            
+            <!-- Global Progress Bar -->
+            <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden mb-1">
+                <div id="unit-progress-bar" class="bg-gradient-to-r from-amber-500 via-purple-500 to-blue-500 h-full w-0 transition-all duration-500"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-grow w-full">
+
+        <!-- TAB 1: LESSONS MAP (خريطة المهمات والدروس) -->
+        <section id="tab-content-lessons" class="tab-page space-y-6">
+            <!-- Welcome Alert Banner -->
+            <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 p-5 rounded-2xl border border-amber-500/30 relative overflow-hidden shadow-2xl">
+                <div class="absolute -left-10 -bottom-10 text-9xl opacity-10 text-amber-400 pointer-events-none">🐱</div>
+                <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                    <div>
+                        <div class="flex items-center gap-2 text-amber-400 font-bold mb-1">
+                            <i class="fa-solid fa-bullhorn text-sm"></i>
+                            <span>أهلاً بك يا بطل المهارات الرقمية!</span>
+                        </div>
+                        <h3 class="text-xl sm:text-2xl font-black text-white">رحلتك الإبداعية في عالم برمجة سكراتش (Scratch)</h3>
+                        <p class="text-sm text-slate-300 mt-1 max-w-3xl leading-relaxed">
+                            استكشف دروس الوحدة (الصفحة 98 إلى 184)، تعرف على المفاهيم واللبنات البرمجية، أكمل المهمات التفاعلية لجمع نقاط الـ XP، وافتح الشارات لتصبح برمجياً محترفاً!
+                        </p>
+                    </div>
+                    <button onclick="switchTab('explorer')" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black px-5 py-3 rounded-xl shadow-lg shadow-amber-500/20 transition flex items-center gap-2 whitespace-nowrap shrink-0">
+                        <i class="fa-solid fa-play"></i>
+                        <span>المختبر التفاعلي المباشر</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Lessons Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <!-- Lesson 1 -->
+                <div class="lesson-card bg-slate-900/90 rounded-2xl border border-slate-800 hover:border-amber-500/50 transition-all p-5 flex flex-col justify-between shadow-lg relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-2 h-full bg-blue-500"></div>
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-xs font-bold text-blue-400 bg-blue-950/80 border border-blue-800 px-2.5 py-1 rounded-full">الدرس 1 (ص 98 - 108)</span>
+                            <span id="quest-badge-1" class="text-xs text-slate-500 bg-slate-800 px-2 py-0.5 rounded-full"><i class="fa-regular fa-circle-check"></i> غير مكتمل</span>
+                        </div>
+                        <h4 class="text-lg font-bold text-white group-hover:text-amber-400 transition mb-2">
+                            مقدمة إلى سكراتش وإنشاء حساب
+                        </h4>
+                        <p class="text-xs text-slate-400 leading-relaxed mb-4">
+                            مفهوم سكراتش كلغة برمجة رسومية، البرمجة على الشبكة (Online) وأوفلاين (Offline)، إنشاء حساب سكراتش، السلامة والمواطنة الرقمية.
+                        </p>
+                        <div class="flex flex-wrap gap-1.5 mb-4">
+                            <span class="text-[11px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Scratch Account</span>
+                            <span class="text-[11px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Visual Programming</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between pt-3 border-t border-slate-800">
+                        <button onclick="openLessonModal(1)" class="text-xs font-bold text-amber-400 hover:text-amber-300 flex items-center gap-1">
+                            <span>اقرأ الملخص والشرح</span>
+                            <i class="fa-solid fa-arrow-left text-[10px]"></i>
+                        </button>
+                        <button onclick="completeQuest(1, 100)" id="quest-btn-1" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition">
+                            +100 XP إكمال المهمة
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Lesson 2 -->
+                <div class="lesson-card bg-slate-900/90 rounded-2xl border border-slate-800 hover:border-amber-500/50 transition-all p-5 flex flex-col justify-between shadow-lg relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-2 h-full bg-purple-500"></div>
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-xs font-bold text-purple-400 bg-purple-950/80 border border-purple-800 px-2.5 py-1 rounded-full">الدرس 2 (ص 109 - 122)</span>
+                            <span id="quest-badge-2" class="text-xs text-slate-500 bg-slate-800 px-2 py-0.5 rounded-full"><i class="fa-regular fa-circle-check"></i> غير مكتمل</span>
+                        </div>
+                        <h4 class="text-lg font-bold text-white group-hover:text-amber-400 transition mb-2">
+                            مكونات الشاشة الرئيسة وبيئة العمل
+                        </h4>
+                        <p class="text-xs text-slate-400 leading-relaxed mb-4">
+                            لوحة اللبنات (Blocks Palette)، منطقة البرمجة (Scripts Area)، المنصة (Stage)، قائمة الكائنات، التحكم بالحجم والاتجاه وتكبير اللبنات.
+                        </p>
+                        <div class="flex flex-wrap gap-1.5 mb-4">
+                            <span class="text-[11px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Stage</span>
+                            <span class="text-[11px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Blocks Palette</span>
+                            <span class="text-[11px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Scripts Area</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between pt-3 border-t border-slate-800">
+                        <button onclick="openLessonModal(2)" class="text-xs font-bold text-amber-400 hover:text-amber-300 flex items-center gap-1">
+                            <span>اقرأ الملخص والشرح</span>
+                            <i class="fa-solid fa-arrow-left text-[10px]"></i>
+                        </button>
+                        <button onclick="completeQuest(2, 100)" id="quest-btn-2" class="bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition">
+                            +100 XP إكمال المهمة
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Lesson 3 -->
+                <div class="lesson-card bg-slate-900/90 rounded-2xl border border-slate-800 hover:border-amber-500/50 transition-all p-5 flex flex-col justify-between shadow-lg relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-2 h-full bg-pink-500"></div>
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-xs font-bold text-pink-400 bg-pink-950/80 border border-pink-800 px-2.5 py-1 rounded-full">الدرس 3 (ص 123 - 138)</span>
+                            <span id="quest-badge-3" class="text-xs text-slate-500 bg-slate-800 px-2 py-0.5 rounded-full"><i class="fa-regular fa-circle-check"></i> غير مكتمل</span>
+                        </div>
+                        <h4 class="text-lg font-bold text-white group-hover:text-amber-400 transition mb-2">
+                            عناصر التصميم: الكائنات والخلفيات والأصوات
+                        </h4>
+                        <p class="text-xs text-slate-400 leading-relaxed mb-4">
+                            إضافة ورسم الكائنات (Sprites)، تغيير المظاهر (Costumes)، خلفيات المنصة (Backdrops)، صيغ الملفات (PNG, JPG, MP3, WAV)، والملكية الفكرية.
+                        </p>
+                        <div class="flex flex-wrap gap-1.5 mb-4">
+                            <span class="text-[11px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Sprites</span>
+                            <span class="text-[11px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Costumes</span>
+                            <span class="text-[11px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Backdrops</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between pt-3 border-t border-slate-800">
+                        <button onclick="openLessonModal(3)" class="text-xs font-bold text-amber-400 hover:text-amber-300 flex items-center gap-1">
+                            <span>اقرأ الملخص والشرح</span>
+                            <i class="fa-solid fa-arrow-left text-[10px]"></i>
+                        </button>
+                        <button onclick="completeQuest(3, 100)" id="quest-btn-3" class="bg-pink-600 hover:bg-pink-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition">
+                            +100 XP إكمال المهمة
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Lesson 4 -->
+                <div class="lesson-card bg-slate-900/90 rounded-2xl border border-slate-800 hover:border-amber-500/50 transition-all p-5 flex flex-col justify-between shadow-lg relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-2 h-full bg-amber-500"></div>
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-xs font-bold text-amber-400 bg-amber-950/80 border border-amber-800 px-2.5 py-1 rounded-full">الدرس 4 (ص 139 - 152)</span>
+                            <span id="quest-badge-4" class="text-xs text-slate-500 bg-slate-800 px-2 py-0.5 rounded-full"><i class="fa-regular fa-circle-check"></i> غير مكتمل</span>
+                        </div>
+                        <h4 class="text-lg font-bold text-white group-hover:text-amber-400 transition mb-2">
+                            تصنيفات اللبنات البرمجية ووظائفها
+                        </h4>
+                        <p class="text-xs text-slate-400 leading-relaxed mb-4">
+                            فئات اللبنات التسع: الحركة (Motion)، الهيئة (Looks)، الصوت (Sound)، الأحداث (Events)، التحكم (Control)، الاستشعار (Sensing)، والعمليات.
+                        </p>
+                        <div class="flex flex-wrap gap-1.5 mb-4">
+                            <span class="text-[11px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Motion & Looks</span>
+                            <span class="text-[11px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Events</span>
+                            <span class="text-[11px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Control</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between pt-3 border-t border-slate-800">
+                        <button onclick="openLessonModal(4)" class="text-xs font-bold text-amber-400 hover:text-amber-300 flex items-center gap-1">
+                            <span>اقرأ الملخص والشرح</span>
+                            <i class="fa-solid fa-arrow-left text-[10px]"></i>
+                        </button>
+                        <button onclick="completeQuest(4, 100)" id="quest-btn-4" class="bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition">
+                            +100 XP إكمال المهمة
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Lesson 5 -->
+                <div class="lesson-card bg-slate-900/90 rounded-2xl border border-slate-800 hover:border-amber-500/50 transition-all p-5 flex flex-col justify-between shadow-lg relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-2 h-full bg-emerald-500"></div>
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-xs font-bold text-emerald-400 bg-emerald-950/80 border border-emerald-800 px-2.5 py-1 rounded-full">الدرس 5 (ص 153 - 168)</span>
+                            <span id="quest-badge-5" class="text-xs text-slate-500 bg-slate-800 px-2 py-0.5 rounded-full"><i class="fa-regular fa-circle-check"></i> غير مكتمل</span>
+                        </div>
+                        <h4 class="text-lg font-bold text-white group-hover:text-amber-400 transition mb-2">
+                            التتابع والمتغيرات في سكراتش
+                        </h4>
+                        <p class="text-xs text-slate-400 leading-relaxed mb-4">
+                            مفهوم التتابع الخوارزمي، إنشاء المتغيرات (Variables)، تخزين النقاط والأسماء، تعديل قيم المتغيرات وإظهارها/إخفائها على المنصة.
+                        </p>
+                        <div class="flex flex-wrap gap-1.5 mb-4">
+                            <span class="text-[11px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Sequencing</span>
+                            <span class="text-[11px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Variables</span>
+                            <span class="text-[11px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Set & Change</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between pt-3 border-t border-slate-800">
+                        <button onclick="openLessonModal(5)" class="text-xs font-bold text-amber-400 hover:text-amber-300 flex items-center gap-1">
+                            <span>اقرأ الملخص والشرح</span>
+                            <i class="fa-solid fa-arrow-left text-[10px]"></i>
+                        </button>
+                        <button onclick="completeQuest(5, 100)" id="quest-btn-5" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition">
+                            +100 XP إكمال المهمة
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Lesson 6 -->
+                <div class="lesson-card bg-slate-900/90 rounded-2xl border border-slate-800 hover:border-amber-500/50 transition-all p-5 flex flex-col justify-between shadow-lg relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-2 h-full bg-red-500"></div>
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-xs font-bold text-red-400 bg-red-950/80 border border-red-800 px-2.5 py-1 rounded-full">الدرس 6 (ص 169 - 184)</span>
+                            <span id="quest-badge-6" class="text-xs text-slate-500 bg-slate-800 px-2 py-0.5 rounded-full"><i class="fa-regular fa-circle-check"></i> غير مكتمل</span>
+                        </div>
+                        <h4 class="text-lg font-bold text-white group-hover:text-amber-400 transition mb-2">
+                            الجمل الشرطية وحلقات التكرار
+                        </h4>
+                        <p class="text-xs text-slate-400 leading-relaxed mb-4">
+                            الشروط (If - Then) و (If - Then - Else)، وحلقات التكرار الثلاث: التكرار المحدد (Repeat)، التكرار المستمر (Forever)، والتكرار المشروط (Repeat Until).
+                        </p>
+                        <div class="flex flex-wrap gap-1.5 mb-4">
+                            <span class="text-[11px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded">If...Then...Else</span>
+                            <span class="text-[11px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Repeat / Forever</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between pt-3 border-t border-slate-800">
+                        <button onclick="openLessonModal(6)" class="text-xs font-bold text-amber-400 hover:text-amber-300 flex items-center gap-1">
+                            <span>اقرأ الملخص والشرح</span>
+                            <i class="fa-solid fa-arrow-left text-[10px]"></i>
+                        </button>
+                        <button onclick="completeQuest(6, 100)" id="quest-btn-6" class="bg-red-600 hover:bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition">
+                            +100 XP إكمال المهمة
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- TAB 2: INTERACTIVE SCRATCH UI & SIMULATOR (مختبر بيئة سكراتش والمحاكي) -->
+        <section id="tab-content-explorer" class="tab-page space-y-6 hidden">
+            
+            <!-- Section Header -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-slate-900 p-4 rounded-xl border border-slate-800">
+                <div>
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-laptop-code text-amber-400"></i>
+                        <span>مختبر ومحاكي بيئة Scratch 3.0</span>
+                    </h3>
+                    <p class="text-xs text-slate-400 mt-0.5">انقر على الأجزاء لاستكشاف مكونات الواجهة، أو جرب تشغيل البرامج التفاعلية بنفسك!</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="setExplorerMode('ui')" id="btn-mode-ui" class="bg-amber-500 text-slate-950 font-bold text-xs px-3 py-2 rounded-lg transition">
+                        🔍 استكشاف مكونات الشاشة
+                    </button>
+                    <button onclick="setExplorerMode('sim')" id="btn-mode-sim" class="bg-slate-800 text-slate-300 hover:text-white font-bold text-xs px-3 py-2 rounded-lg transition">
+                        ⚡ المحاكي المباشر (Run Code)
+                    </button>
+                </div>
+            </div>
+
+            <!-- UI EXPLORER MODE -->
+            <div id="explorer-ui-container" class="space-y-4">
+                <div class="bg-slate-900 p-4 rounded-2xl border border-slate-800 shadow-xl overflow-hidden">
+                    <div class="text-xs text-slate-400 mb-3 flex items-center justify-between">
+                        <span>خريطة مكونات واجهة برمجية سكراتش الرئيسية (اضغط على أي جزء لقراءة الشرح المنهجي):</span>
+                        <span class="text-amber-400 font-bold"><i class="fa-solid fa-hand-pointer"></i> أجزاء تفاعلية</span>
+                    </div>
+
+                    <!-- Scratch Mockup Grid Interface -->
+                    <div class="grid grid-cols-12 gap-2 text-xs font-bold text-center">
+                        
+                        <!-- Top Menu Bar Hotspot -->
+                        <div onclick="showHotspotInfo('menu')" class="col-span-12 bg-slate-800 hover:bg-blue-900/60 border border-slate-700 hover:border-blue-400 p-2 rounded-lg cursor-pointer transition text-blue-300 flex justify-between items-center px-4">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-globe"></i> شريط القوائم والأدوات (Menu Bar & Title)</span>
+                            <span class="text-[10px] bg-blue-950 px-2 py-0.5 rounded text-blue-200">اللغة | الملف | التحرير | اسم المشروع</span>
+                        </div>
+
+                        <!-- Left Column: Blocks Palette & Tabs -->
+                        <div class="col-span-12 md:col-span-4 bg-slate-950 border border-slate-800 p-2 rounded-lg space-y-2">
+                            <div class="flex gap-1 justify-center border-b border-slate-800 pb-1">
+                                <span class="bg-blue-600 text-white px-2 py-1 rounded text-[11px]">المقاطع البرمجية</span>
+                                <span class="bg-slate-800 text-slate-400 px-2 py-1 rounded text-[11px]">المظاهر</span>
+                                <span class="bg-slate-800 text-slate-400 px-2 py-1 rounded text-[11px]">الأصوات</span>
+                            </div>
+                            
+                            <!-- Block categories list hotspot -->
+                            <div onclick="showHotspotInfo('palette')" class="bg-slate-900 hover:bg-amber-950/60 border border-slate-800 hover:border-amber-500 p-3 rounded cursor-pointer transition text-right space-y-1.5">
+                                <div class="text-amber-400 text-[11px] font-bold mb-1"><i class="fa-solid fa-shapes"></i> لوحة فئات اللبنات البرمجية (Blocks Palette):</div>
+                                <div class="grid grid-cols-2 gap-1 text-[10px]">
+                                    <span class="block-motion rounded px-1 text-center">الحركة (Motion)</span>
+                                    <span class="block-looks rounded px-1 text-center">الهيئة (Looks)</span>
+                                    <span class="block-sound rounded px-1 text-center">الصوت (Sound)</span>
+                                    <span class="block-events rounded px-1 text-center">الأحداث (Events)</span>
+                                    <span class="block-control rounded px-1 text-center">التحكم (Control)</span>
+                                    <span class="block-sensing rounded px-1 text-center">الاستشعار (Sensing)</span>
+                                    <span class="block-operators rounded px-1 text-center">العمليات (Operators)</span>
+                                    <span class="block-variables rounded px-1 text-center">المتغيرات (Variables)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Middle Column: Script / Coding Canvas -->
+                        <div onclick="showHotspotInfo('scripts')" class="col-span-12 md:col-span-5 bg-slate-950/90 border border-slate-800 hover:border-emerald-500 p-3 rounded-lg cursor-pointer transition text-emerald-300 flex flex-col justify-between h-56 bg-grid-pattern">
+                            <div class="flex justify-between items-center text-[11px]">
+                                <span><i class="fa-solid fa-code"></i> منطقة البرمجة (Scripts Area)</span>
+                                <span class="text-slate-500 text-[10px]"><i class="fa-solid fa-magnifying-glass-plus"></i> أدوات التكبير والتصغير</span>
+                            </div>
+                            <!-- Fake block stack -->
+                            <div class="space-y-1 text-right max-w-xs mx-auto my-auto">
+                                <div class="scratch-block block-events text-xs">عند نُقر 🚩</div>
+                                <div class="scratch-block block-motion text-xs mr-3">تحرك (10) خطوة</div>
+                                <div class="scratch-block block-looks text-xs mr-3">قل [مرحباً!] لمدة (2) ثانية</div>
+                            </div>
+                            <div class="text-[10px] text-slate-500 text-left">سحب وإسقاط اللبنات للتجميع</div>
+                        </div>
+
+                        <!-- Right Column: Stage & Sprites -->
+                        <div class="col-span-12 md:col-span-3 space-y-2">
+                            <!-- Stage Hotspot -->
+                            <div onclick="showHotspotInfo('stage')" class="bg-slate-900 hover:bg-purple-950/60 border border-slate-800 hover:border-purple-400 p-2 rounded-lg cursor-pointer transition text-purple-300 flex flex-col items-center justify-center h-36 relative overflow-hidden">
+                                <div class="absolute top-1 left-2 flex gap-1">
+                                    <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block" title="علم أخضر - تشغيل"></span>
+                                    <span class="w-3 h-3 rounded-full bg-red-500 inline-block" title="زر إيقاف"></span>
+                                </div>
+                                <span class="text-[11px] font-bold mb-1"><i class="fa-solid fa-display"></i> المنصة (Stage)</span>
+                                <div class="text-3xl my-1 animate-bounce">🐱</div>
+                                <span class="text-[10px] text-slate-400">عرض نتائج العمل والمشروع</span>
+                            </div>
+
+                            <!-- Sprites & Backdrop List Hotspot -->
+                            <div onclick="showHotspotInfo('sprites')" class="bg-slate-900 hover:bg-pink-950/60 border border-slate-800 hover:border-pink-400 p-2 rounded-lg cursor-pointer transition text-pink-300">
+                                <div class="text-[11px] font-bold mb-1"><i class="fa-solid fa-ghost"></i> منطقة الكائنات والخلفيات</div>
+                                <div class="flex justify-around items-center text-[10px] text-slate-400 mt-1">
+                                    <span>الكائن الحركي (Sprite)</span>
+                                    <span>خلفية المنصة (Backdrop)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Hotspot Information Card -->
+                <div id="hotspot-info-box" class="bg-slate-900 border-2 border-amber-500/40 p-5 rounded-2xl shadow-xl">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-circle-info"></i>
+                        </div>
+                        <div>
+                            <h4 id="hotspot-title" class="text-lg font-bold text-amber-300">اختر جزئياً من الشاشة أعلاه</h4>
+                            <p id="hotspot-sub" class="text-xs text-slate-400">انقر على أي مكون لمطالعة الشرح التفصيلي المستفاد من المنهاج</p>
+                        </div>
+                    </div>
+                    <div id="hotspot-desc" class="text-sm text-slate-300 leading-relaxed pt-2 border-t border-slate-800">
+                        تحتوي شاشة سكراتش 3.0 على منظمات وأدوات تسمح للمتعلم ببناء البرامج بطريقة تفاعلية سلسة من خلال تجميع اللبنات البرمجية كقطع البزل.
+                    </div>
+                </div>
+            </div>
+
+            <!-- LIVE SIMULATOR MODE -->
+            <div id="explorer-sim-container" class="grid grid-cols-1 lg:grid-cols-12 gap-6 hidden">
+                
+                <!-- Left Control Panel & Block Palette -->
+                <div class="lg:col-span-5 bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-4">
+                    <h4 class="text-sm font-bold text-white flex items-center justify-between border-b border-slate-800 pb-2">
+                        <span><i class="fa-solid fa-cubes text-amber-400"></i> مكتبة اللبنات الجاهزة للتجربة</span>
+                        <span class="text-xs text-slate-400">انقر لإضافة اللبنة للمنسقة</span>
+                    </h4>
+
+                    <!-- Palette Selector -->
+                    <div class="space-y-2">
+                        <!-- Motion Blocks -->
+                        <div>
+                            <span class="text-[11px] font-bold text-blue-400 block mb-1">لبنات الحركة (Motion)</span>
+                            <div class="flex flex-wrap gap-2">
+                                <button onclick="simAddBlock('move')" class="scratch-block block-motion text-xs">تحرك 20 خطوة Forward</button>
+                                <button onclick="simAddBlock('turnRight')" class="scratch-block block-motion text-xs">استدر ↻ 15 درجة</button>
+                                <button onclick="simAddBlock('resetPos')" class="scratch-block block-motion text-xs">اذهب للمركز (0,0)</button>
+                            </div>
+                        </div>
+
+                        <!-- Looks Blocks -->
+                        <div>
+                            <span class="text-[11px] font-bold text-purple-400 block mb-1">لبنات الهيئة (Looks)</span>
+                            <div class="flex flex-wrap gap-2">
+                                <button onclick="simAddBlock('sayHello')" class="scratch-block block-looks text-xs">قل [مرحباً بك!]</button>
+                                <button onclick="simAddBlock('changeCostume')" class="scratch-block block-looks text-xs">المظهر التالي</button>
+                                <button onclick="simAddBlock('changeSize')" class="scratch-block block-looks text-xs">غير الحجم بمقدار +10</button>
+                            </div>
+                        </div>
+
+                        <!-- Sound & Variables -->
+                        <div>
+                            <span class="text-[11px] font-bold text-pink-400 block mb-1">لبنات الصوت والتحكم والمتغيرات</span>
+                            <div class="flex flex-wrap gap-2">
+                                <button onclick="simAddBlock('playSound')" class="scratch-block block-sound text-xs">شغّل صوت مواء 🐱</button>
+                                <button onclick="simAddBlock('addScore')" class="scratch-block block-variables text-xs">غير [النقاط] بمقدار +5</button>
+                                <button onclick="simAddBlock('bgNext')" class="scratch-block block-events text-xs">الخلفية التالية 🌄</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Selected Code Sequence Queue -->
+                    <div class="pt-2 border-t border-slate-800">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold text-slate-300"><i class="fa-solid fa-list-ol text-emerald-400"></i> المقطع البرمجي الحالي (Script):</span>
+                            <button onclick="simClearScript()" class="text-[11px] text-red-400 hover:text-red-300 font-bold">
+                                <i class="fa-solid fa-trash"></i> مسح المقطع
+                            </button>
+                        </div>
+                        <div id="sim-script-queue" class="bg-slate-950 p-3 rounded-xl border border-slate-800 min-h-[140px] space-y-1.5 flex flex-col items-start overflow-y-auto max-h-48">
+                            <div class="scratch-block block-events text-xs">عند نُقر 🚩 (بداية)</div>
+                            <!-- Dynamic blocks go here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Live Stage Canvas -->
+                <div class="lg:col-span-7 bg-slate-900 p-5 rounded-2xl border border-slate-800 flex flex-col justify-between">
+                    <div>
+                        <!-- Stage Toolbar -->
+                        <div class="flex justify-between items-center bg-slate-950 p-2.5 rounded-xl border border-slate-800 mb-3">
+                            <!-- Green Flag & Stop -->
+                            <div class="flex items-center gap-2">
+                                <button onclick="simRunScript()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs px-3.5 py-1.5 rounded-lg flex items-center gap-1.5 shadow-md transition">
+                                    <i class="fa-solid fa-flag text-sm"></i>
+                                    <span>تشغيل (Green Flag)</span>
+                                </button>
+                                <button onclick="simStopScript()" class="bg-red-600/80 hover:bg-red-600 text-white font-bold text-xs px-3 py-1.5 rounded-lg transition">
+                                    <i class="fa-solid fa-stop text-sm"></i>
+                                </button>
+                            </div>
+
+                            <!-- Variable Screen Display -->
+                            <div class="bg-amber-950/80 border border-amber-500/40 text-amber-300 px-3 py-1 rounded-lg text-xs font-mono font-bold flex items-center gap-2">
+                                <span>النقاط (Score):</span>
+                                <span id="sim-var-score" class="text-white bg-amber-600 px-1.5 py-0.5 rounded">0</span>
+                            </div>
+                        </div>
+
+                        <!-- Display Stage Box -->
+                        <div id="sim-stage-box" class="w-full h-72 rounded-2xl border-2 border-slate-700 relative overflow-hidden flex items-center justify-center transition-all bg-slate-950 bg-grid-pattern shadow-inner">
+                            
+                            <!-- Sprite Speech Bubble -->
+                            <div id="sim-sprite-bubble" class="absolute hidden z-20 transition-all duration-300">
+                                <div class="speech-bubble text-xs" id="sim-bubble-text">مرحباً بك!</div>
+                            </div>
+
+                            <!-- Sprite Element (Cat SVG / Avatar) -->
+                            <div id="sim-sprite" class="w-20 h-20 absolute transition-all duration-300 flex items-center justify-center text-5xl cursor-pointer" style="transform: translate(0px, 0px) rotate(0deg) scale(1);">
+                                <span id="sim-sprite-icon">🐱</span>
+                            </div>
+
+                            <!-- Stage Coordinates Indicator -->
+                            <div class="absolute bottom-2 left-3 text-[10px] text-slate-500 font-mono">
+                                X: <span id="sim-pos-x">0</span> | Y: <span id="sim-pos-y">0</span> | الاتجاه: <span id="sim-pos-deg">90°</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Costume & Sprite Chooser Toolbar -->
+                    <div class="pt-3 border-t border-slate-800 flex flex-wrap justify-between items-center gap-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-slate-400 font-bold">تغيير الكائن:</span>
+                            <button onclick="simSetSprite('🐱')" class="bg-slate-800 hover:bg-slate-700 text-sm p-1.5 rounded-lg">🐱</button>
+                            <button onclick="simSetSprite('🚀')" class="bg-slate-800 hover:bg-slate-700 text-sm p-1.5 rounded-lg">🚀</button>
+                            <button onclick="simSetSprite('🤖')" class="bg-slate-800 hover:bg-slate-700 text-sm p-1.5 rounded-lg">🤖</button>
+                            <button onclick="simSetSprite('⚽')" class="bg-slate-800 hover:bg-slate-700 text-sm p-1.5 rounded-lg">⚽</button>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-slate-400 font-bold">خلفية المنصة:</span>
+                            <button onclick="simSetBg('grid')" class="text-xs bg-slate-800 hover:bg-slate-700 px-2 py-1 rounded text-slate-300">شبكية</button>
+                            <button onclick="simSetBg('space')" class="text-xs bg-indigo-950 border border-indigo-500/40 px-2 py-1 rounded text-indigo-300">فضاء 🌌</button>
+                            <button onclick="simSetBg('forest')" class="text-xs bg-emerald-950 border border-emerald-500/40 px-2 py-1 rounded text-emerald-300">غابة 🌲</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- TAB 3: GAMIFIED BLOCK LOGIC CHALLENGE (تحدي اللبنات والمنطق) -->
+        <section id="tab-content-challenge" class="tab-page space-y-6 hidden">
+            <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl max-w-4xl mx-auto space-y-6">
+                
+                <!-- Game Header -->
+                <div class="flex flex-wrap justify-between items-center gap-3 border-b border-slate-800 pb-4">
+                    <div>
+                        <span class="bg-amber-500/20 text-amber-400 text-xs px-2.5 py-1 rounded-full border border-amber-500/30 font-bold">تحدي الذكاء والمنطق البرمجي</span>
+                        <h3 class="text-xl font-black text-white mt-1">تحدي تحليل اللبنات والتتابع</h3>
+                    </div>
+                    <div class="flex items-center gap-4 bg-slate-950 px-4 py-2 rounded-xl border border-slate-800">
+                        <div class="text-center">
+                            <span class="text-[10px] text-slate-400 block">المرحلة</span>
+                            <span id="challenge-step-num" class="text-base font-extrabold text-amber-400">1 / 5</span>
+                        </div>
+                        <div class="h-6 w-px bg-slate-800"></div>
+                        <div class="text-center">
+                            <span class="text-[10px] text-slate-400 block">رصيد التحدي</span>
+                            <span id="challenge-score" class="text-base font-extrabold text-emerald-400">0 XP</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Puzzle Card Container -->
+                <div id="puzzle-box" class="space-y-4">
+                    <!-- Dynamic Challenge Content rendered via JS -->
+                </div>
+
+                <!-- Navigation Controls -->
+                <div class="flex justify-between items-center pt-4 border-t border-slate-800">
+                    <button onclick="prevPuzzle()" id="puzzle-prev-btn" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs px-4 py-2.5 rounded-xl transition">
+                        <i class="fa-solid fa-chevron-right ml-1"></i> السؤال السابق
+                    </button>
+                    <button onclick="nextPuzzle()" id="puzzle-next-btn" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs px-5 py-2.5 rounded-xl shadow-lg shadow-amber-500/20 transition">
+                        السؤال التالي <i class="fa-solid fa-chevron-left mr-1"></i>
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- TAB 4: INTERACTIVE QUIZ & SELF-CHECKLIST (بنك الأسئلة والتقويم الذاتي) -->
+        <section id="tab-content-quiz" class="tab-page space-y-6 hidden">
+            
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                <!-- Left Column: Main Quiz (10 Questions) -->
+                <div class="lg:col-span-8 bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl space-y-6">
+                    <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                        <div>
+                            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-clipboard-check text-amber-400"></i>
+                                <span>اختبار تقويم الوحدة الثانية الشامل</span>
+                            </h3>
+                            <p class="text-xs text-slate-400">أسئلة اختيار من متعدد وصواب/خطأ وفق المنهاج المدرسي</p>
+                        </div>
+                        <span id="quiz-result-tag" class="bg-blue-950 text-blue-300 text-xs font-bold px-3 py-1 rounded-full border border-blue-500/30">
+                            10 أسئلة
+                        </span>
+                    </div>
+
+                    <!-- Quiz Form -->
+                    <form id="unit-quiz-form" onsubmit="submitUnitQuiz(event)" class="space-y-6">
+                        <div id="quiz-questions-container" class="space-y-6">
+                            <!-- Injected via JS -->
+                        </div>
+
+                        <div class="pt-4 border-t border-slate-800 flex justify-between items-center">
+                            <button type="submit" class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black px-6 py-3 rounded-xl shadow-lg shadow-amber-500/20 transition flex items-center gap-2">
+                                <i class="fa-solid fa-check-double"></i>
+                                <span>إنهاء التصحيح وحساب النتيجة</span>
+                            </button>
+                            <button type="button" onclick="resetUnitQuiz()" class="text-xs text-slate-400 hover:text-slate-200">
+                                <i class="fa-solid fa-rotate-right"></i> إعادة المحاولة
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Right Column: Self Assessment Checklist (جدول التقويم الذاتي) -->
+                <div class="lg:col-span-4 bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl space-y-4">
+                    <div>
+                        <h4 class="text-base font-bold text-amber-400 flex items-center gap-2">
+                            <i class="fa-solid fa-user-check"></i>
+                            <span>جدول التقويم الذاتي للمتعلم</span>
+                        </h4>
+                        <p class="text-xs text-slate-400 mt-1">قيم مستوى إتقانك للمهارات قبل الانتقال للشهادة:</p>
+                    </div>
+
+                    <div class="space-y-3 text-xs">
+                        
+                        <!-- Check Item 1 -->
+                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
+                            <p class="text-slate-200 font-bold">1. أستطيع التمييز بين لغة سكراتش أونلاين وأوفلاين</p>
+                            <div class="flex gap-2">
+                                <label class="flex-1 bg-slate-900 hover:bg-emerald-950 border border-slate-700 p-1.5 rounded text-center cursor-pointer">
+                                    <input type="radio" name="self_1" value="3" class="hidden"> <span class="text-emerald-400">أتقن تماماً</span>
+                                </label>
+                                <label class="flex-1 bg-slate-900 hover:bg-amber-950 border border-slate-700 p-1.5 rounded text-center cursor-pointer">
+                                    <input type="radio" name="self_1" value="2" class="hidden"> <span class="text-amber-400">بمساعدة</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Check Item 2 -->
+                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
+                            <p class="text-slate-200 font-bold">2. أستطيع إضافة كائن جديد وتغيير مظاهره وخلفية المنصة</p>
+                            <div class="flex gap-2">
+                                <label class="flex-1 bg-slate-900 hover:bg-emerald-950 border border-slate-700 p-1.5 rounded text-center cursor-pointer">
+                                    <input type="radio" name="self_2" value="3" class="hidden"> <span class="text-emerald-400">أتقن تماماً</span>
+                                </label>
+                                <label class="flex-1 bg-slate-900 hover:bg-amber-950 border border-slate-700 p-1.5 rounded text-center cursor-pointer">
+                                    <input type="radio" name="self_2" value="2" class="hidden"> <span class="text-amber-400">بمساعدة</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Check Item 3 -->
+                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
+                            <p class="text-slate-200 font-bold">3. أستطيع إنشاء متغير وتخزين النتيجة واستخدام لبنات التكرار والشرط</p>
+                            <div class="flex gap-2">
+                                <label class="flex-1 bg-slate-900 hover:bg-emerald-950 border border-slate-700 p-1.5 rounded text-center cursor-pointer">
+                                    <input type="radio" name="self_3" value="3" class="hidden"> <span class="text-emerald-400">أتقن تماماً</span>
+                                </label>
+                                <label class="flex-1 bg-slate-900 hover:bg-amber-950 border border-slate-700 p-1.5 rounded text-center cursor-pointer">
+                                    <input type="radio" name="self_3" value="2" class="hidden"> <span class="text-amber-400">بمساعدة</span>
+                                </label>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <button onclick="saveSelfCheck()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold py-2.5 rounded-xl border border-slate-700 transition">
+                        <i class="fa-solid fa-floppy-disk"></i> حفظ نتائج التقييم الذاتي
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- TAB 5: CERTIFICATE & BADGES (الشهادة والإنجازات) -->
+        <section id="tab-content-certificate" class="tab-page space-y-6 hidden">
+            
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                <!-- Left: Unlocked Badges Showcase -->
+                <div class="lg:col-span-4 bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl space-y-4">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-trophy text-amber-400"></i>
+                        <span>سجل الشارات والأوسمة</span>
+                    </h3>
+                    
+                    <div id="badges-container" class="grid grid-cols-2 gap-3">
+                        <!-- Badges rendered dynamically -->
+                    </div>
+                </div>
+
+                <!-- Right: Dynamic Printable Certificate -->
+                <div class="lg:col-span-8 bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl space-y-4">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                        <div>
+                            <h3 class="text-lg font-bold text-white">شهادة إتمام وحدة الخوارزميات والبرمجة</h3>
+                            <p class="text-xs text-slate-400">أدخل اسمك الكامل لطباعة شهادة تفوق رسمية</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <input type="text" id="student-name-input" placeholder="اكتب اسم الطالب هنا..." oninput="updateCertificateName()" class="bg-slate-950 border border-slate-700 text-amber-300 text-xs px-3 py-2 rounded-xl focus:outline-none focus:border-amber-500 w-48">
+                            <button onclick="window.print()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs px-4 py-2 rounded-xl transition flex items-center gap-1.5 shrink-0">
+                                <i class="fa-solid fa-print"></i>
+                                <span>طباعة الشهادة</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Certificate Printable Template -->
+                    <div id="printable-certificate" class="bg-gradient-to-br from-amber-50 via-slate-50 to-amber-100 text-slate-900 p-8 rounded-2xl border-8 border-double border-amber-600 shadow-2xl relative overflow-hidden text-center space-y-4 my-4">
+                        
+                        <!-- Watermark -->
+                        <div class="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none text-9xl">
+                            🐱
+                        </div>
+
+                        <!-- Top Header -->
+                        <div class="flex justify-between items-center border-b-2 border-amber-600/30 pb-3 text-xs font-bold text-slate-700">
+                            <div>
+                                <p>وكالة الغوث الدولية (UNRWA)</p>
+                                <p class="text-amber-800">مدرسة ذكور وادي السير الإعدادية</p>
+                            </div>
+                            <div class="text-center">
+                                <span class="text-2xl">🏆</span>
+                            </div>
+                            <div class="text-left">
+                                <p>مادة المهارات الرقمية</p>
+                                <p>الصف الثامن - الفصل الأول</p>
+                            </div>
+                        </div>
+
+                        <!-- Main Certificate Text -->
+                        <div class="py-4 space-y-3">
+                            <span class="text-xs uppercase tracking-widest text-amber-800 font-black">شهـادة تقـدير وإتـمام</span>
+                            <h2 class="text-2xl sm:text-3xl font-black text-slate-900">تشهد إدارة المدرسة بأن الطالب:</h2>
+                            <div class="text-xl sm:text-2xl font-black text-amber-700 underline decoration-amber-500 underline-offset-8 min-h-[36px]" id="cert-student-name">
+                                (اسم الطالب المبدع)
+                            </div>
+                            <p class="text-xs sm:text-sm text-slate-700 max-w-xl mx-auto leading-relaxed pt-2">
+                                قد أتم بنجاح واقتدار كافة مهمات واختبارات <strong>الوحدة الثانية: الخوارزميات والبرمجة (برمجية سكراتش Scratch)</strong> وحصل على المستوى المتقدم في التفكير البرمجي والمنطقي.
+                            </p>
+                        </div>
+
+                        <!-- Score & XP Badges on Certificate -->
+                        <div class="flex justify-center gap-6 py-2">
+                            <div class="bg-amber-100 border border-amber-400 px-4 py-1.5 rounded-xl text-xs font-bold text-amber-900">
+                                مجموع النقاط: <span id="cert-xp-val" class="font-black text-amber-700">0</span> XP
+                            </div>
+                            <div class="bg-blue-100 border border-blue-400 px-4 py-1.5 rounded-xl text-xs font-bold text-blue-900">
+                                التقدير: <span id="cert-grade-val" class="font-black text-blue-800">ممتاز 🌟</span>
+                            </div>
+                        </div>
+
+                        <!-- Signatures Footer -->
+                        <div class="flex justify-between items-end pt-6 border-t border-slate-300 text-xs font-bold text-slate-700">
+                            <div>
+                                <p class="text-slate-500 text-[10px]">معد ومصمم المادة:</p>
+                                <p class="text-amber-900 font-extrabold text-sm">المعلم عامر كراجه</p>
+                            </div>
+                            <div>
+                                <p class="text-slate-500 text-[10px]">تاريخ الإصدار:</p>
+                                <p id="cert-date" class="font-mono text-slate-800">2026/11/24</p>
+                            </div>
+                            <div>
+                                <p class="text-slate-500 text-[10px]">مدرسة ذكور وادي السير</p>
+                                <p class="text-slate-900">خاتم المدرسة والاعتماد</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER SECTION -->
+    <footer class="bg-slate-900 border-t border-slate-800 py-6 mt-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-400">
+            <div class="space-y-1 text-center md:text-right">
+                <div class="flex items-center justify-center md:justify-start gap-2 text-slate-200 font-bold">
+                    <span>مدرسة ذكور وادي السير الإعدادية - الأنروا (UNRWA)</span>
+                    <span class="text-amber-400">•</span>
+                    <span>المركز الوطني لتطوير المناهج</span>
+                </div>
+                <p>الوحدة الثانية: الخوارزميات والبرمجة (برمجية سكراتش Scratch) - المهارات الرقمية الصف الثامن</p>
+            </div>
+            
+            <div class="flex flex-col items-center md:items-end gap-1">
+                <div class="bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-lg text-amber-300 font-bold flex items-center gap-2">
+                    <i class="fa-solid fa-code"></i>
+                    <span>تصميم وإعداد: المعلم عامر كراجه</span>
+                </div>
+                <span class="text-[10px] text-slate-500">amer-karajeh_Server</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- LESSON DETAIL MODAL -->
+    <div id="lesson-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full max-h-[85vh] overflow-y-auto p-6 space-y-4 shadow-2xl relative">
+            <button onclick="closeLessonModal()" class="absolute top-4 left-4 text-slate-400 hover:text-white w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                <span id="modal-lesson-number" class="bg-amber-500 text-slate-950 text-xs font-black px-2.5 py-1 rounded-full">الدرس 1</span>
+                <h3 id="modal-lesson-title" class="text-xl font-bold text-white">عنوان الدرس</h3>
+            </div>
+            <div id="modal-lesson-body" class="text-sm text-slate-300 leading-relaxed space-y-3">
+                <!-- Injected dynamically -->
+            </div>
+            <div class="pt-3 border-t border-slate-800 flex justify-end">
+                <button onclick="closeLessonModal()" class="bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold px-4 py-2 rounded-xl">إغلاق Window</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- GITHUB PAGES DEPLOYMENT GUIDE MODAL -->
+    <div id="github-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-emerald-500/40 rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl relative">
+            <button onclick="closeGitHubModal()" class="absolute top-4 left-4 text-slate-400 hover:text-white w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl">
+                    <i class="fa-brands fa-github"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-white">دليل نشر التطبيق على GitHub Pages</h3>
+                    <p class="text-xs text-slate-400">خطوات استضافة الملف `index.html` مجاناً للطلاب والمعلمين</p>
+                </div>
+            </div>
+
+            <div class="text-xs text-slate-300 space-y-3 leading-relaxed">
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+                    <strong class="text-emerald-400 block mb-1">الخطوة 1: إنشاء مستودع جديد (Repository)</strong>
+                    سجّل الدخول في حساب GitHub، ثم انشئ مستودعاً جديداً باسم <code class="bg-slate-800 text-amber-300 px-1.5 py-0.5 rounded">scratch-grade8</code> واجعل الخصوصية Public.
+                </div>
+
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+                    <strong class="text-emerald-400 block mb-1">الخطوة 2: رفع ملف index.html</strong>
+                    قم باختيار <code class="bg-slate-800 text-amber-300 px-1.5 py-0.5 rounded">Upload an existing file</code> وقم برفع هذا الملف بعد حفظه باسم <code class="bg-slate-800 text-amber-300 px-1.5 py-0.5 rounded">index.html</code> مباشرة.
+                </div>
+
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+                    <strong class="text-emerald-400 block mb-1">الخطوة 3: تفعيل الاستضافة (GitHub Pages)</strong>
+                    انتقل لتبويب <code class="bg-slate-800 text-amber-300 px-1.5 py-0.5 rounded">Settings</code> -> اختر <code class="bg-slate-800 text-amber-300 px-1.5 py-0.5 rounded">Pages</code> -> حدد الفرع <code class="bg-slate-800 text-amber-300 px-1.5 py-0.5 rounded">main</code> ثم اضغط Save.
+                </div>
+
+                <div class="bg-emerald-950/60 border border-emerald-500/30 p-3 rounded-xl text-emerald-300">
+                    <i class="fa-solid fa-circle-check"></i> ستحصل على رابط مجاني مباشر للموقع يعمل على جميع الهواتف والحواسيب!
+                </div>
+            </div>
+
+            <div class="pt-2 flex justify-end">
+                <button onclick="closeGitHubModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4 py-2 rounded-xl">تم الفهم</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC CODE -->
+    <script>
+        /* GLOBAL STATE */
+        const state = {
+            xp: 0,
+            level: 1,
+            completedQuests: [],
+            soundMuted: false,
+            puzzleIndex: 0,
+            puzzleScore: 0,
+            badgeUnlocked: []
+        };
+
+        /* WEB AUDIO API SYNTHESIZER FOR SOUND EFFECTS */
+        let audioCtx = null;
+        function getAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            return audioCtx;
+        }
+
+        function playSound(type) {
+            if (state.soundMuted) return;
+            try {
+                const ctx = getAudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                const now = ctx.currentTime;
+                if (type === 'click') {
+                    osc.frequency.setValueAtTime(400, now);
+                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+                    osc.start(now);
+                    osc.stop(now + 0.05);
+                } else if (type === 'success') {
+                    osc.frequency.setValueAtTime(523.25, now); // C5
+                    osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+                    osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+                    osc.start(now);
+                    osc.stop(now + 0.35);
+                } else if (type === 'meow') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(600, now);
+                    osc.frequency.exponentialRampToValueAtTime(300, now + 0.25);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                    osc.start(now);
+                    osc.stop(now + 0.3);
+                } else if (type === 'wrong') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(180, now);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                    osc.start(now);
+                    osc.stop(now + 0.2);
+                }
+            } catch (e) { console.log(e); }
+        }
+
+        /* INITIALIZATION */
+        window.addEventListener('DOMContentLoaded', () => {
+            loadSavedProgress();
+            renderBadges();
+            initPuzzles();
+            renderQuizQuestions();
+            updateProgressUI();
+
+            // Sound Toggle
+            document.getElementById('sound-toggle-btn').addEventListener('click', () => {
+                state.soundMuted = !state.soundMuted;
+                const icon = document.getElementById('sound-toggle-btn').querySelector('i');
+                if (state.soundMuted) {
+                    icon.className = 'fa-solid fa-volume-xmark text-red-400';
+                } else {
+                    icon.className = 'fa-solid fa-volume-high text-sm';
+                    playSound('click');
+                }
+            });
+        });
+
+        /* NAVIGATION TABS SWITCHER */
+        function switchTab(tabId) {
+            playSound('click');
+            document.querySelectorAll('.tab-page').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-tab').forEach(el => {
+                el.classList.remove('bg-slate-800', 'text-amber-400', 'border', 'border-amber-500/40');
+                el.classList.add('text-slate-400');
+            });
+
+            document.getElementById(`tab-content-${tabId}`).classList.remove('hidden');
+            const btn = document.getElementById(`tab-btn-${tabId}`);
+            btn.classList.add('bg-slate-800', 'text-amber-400', 'border', 'border-amber-500/40');
+            btn.classList.remove('text-slate-400');
+        }
+
+        /* XP & LEVEL MANAGEMENT */
+        function addXP(amount) {
+            state.xp += amount;
+            // Level calculation
+            const newLevel = Math.floor(state.xp / 200) + 1;
+            if (newLevel > state.level) {
+                state.level = newLevel;
+                playSound('success');
+            }
+            saveProgress();
+            updateProgressUI();
+        }
+
+        function updateProgressUI() {
+            document.getElementById('xp-counter').innerText = state.xp;
+            
+            // Level titles
+            const titles = ['مبرمج مبتدئ 1', 'مستكشف سكراتش 2', 'مطور اللبنات 3', 'بطل المتغيرات 4', 'خبير البرمجة 5+'];
+            const titleIndex = Math.min(state.level - 1, titles.length - 1);
+            document.getElementById('user-level').innerText = titles[titleIndex];
+
+            // Progress Bar (Total 6 quests = 600 XP max base)
+            const pct = Math.min(Math.round((state.completedQuests.length / 6) * 100), 100);
+            document.getElementById('unit-progress-bar').style.width = `${pct}%`;
+
+            // Certificate sync
+            document.getElementById('cert-xp-val').innerText = state.xp;
+        }
+
+        /* LESSON QUESTS DATA & MODALS */
+        const lessonsData = {
+            1: {
+                title: 'مقدمة إلى سكراتش وإنشاء حساب (ص 98 - 108)',
+                summary: `
+                    <div class="space-y-2">
+                        <p><strong>برمجية سكراتش (Scratch):</strong> هي بيئة برمجة رسومية تعتمد على تجميع اللبنات البرمجية لبناء الألعاب والقصص التفاعلية.</p>
+                        <p><strong>طرق الاستخدام:</strong></p>
+                        <ul class="list-disc list-inside pr-4 space-y-1">
+                            <li><strong>على الشبكة (Online):</strong> عبر موقع scratch.mit.edu وتتطلب حساباً لحفظ المشاريع مباشرة.</li>
+                            <li><strong>بدون شبكة (Offline):</strong> عبر تنزيل وتثبيت البرمجية على الجهاز المحلي.</li>
+                        </ul>
+                        <p><strong>المواطنة الرقمية وحقوق الملكية:</strong> التزام الأمان الرقمي وعدم سرقة مشاريع الآخرين بدون الإشارة للمصدر الأصلي.</p>
+                    </div>
+                `
+            },
+            2: {
+                title: 'مكونات الشاشة الرئيسة وبيئة العمل (ص 109 - 122)',
+                summary: `
+                    <div class="space-y-2">
+                        <p><strong>المكونات الأساسية لواجهة سكراتش:</strong></p>
+                        <ul class="list-disc list-inside pr-4 space-y-1">
+                            <li><strong>شريط القوائم:</strong> تغيير اللغة، حفظ الملف، والتعديلات.</li>
+                            <li><strong>لوحة اللبنات (Blocks Palette):</strong> تحتوي على الفئات الملونة للبنات.</li>
+                            <li><strong>منطقة البرمجة (Scripts Area):</strong> المكان المخصص لتجميع ورصف اللبنات.</li>
+                            <li><strong>المنصة (Stage):</strong> المساحة التي تظهر عليها نتائج التنفيذ (الأبعاد: X: -240 إلى 240, Y: -180 إلى 180).</li>
+                            <li><strong>منطقة الكائنات (Sprites Area):</strong> لإضافة وتعديل الكائنات المستخدمة.</li>
+                        </ul>
+                    </div>
+                `
+            },
+            3: {
+                title: 'عناصر التصميم: الكائنات والخلفيات والأصوات (ص 123 - 138)',
+                summary: `
+                    <div class="space-y-2">
+                        <p><strong>الكائنات (Sprites):</strong> العناصر التفاعلية في المشروع، ويمكن إضافة كائن من المكتبة، رسمه، أو رفعه كملف.</p>
+                        <p><strong>المظاهر (Costumes):</strong> هي الأشكال المختلفة لنفس الكائن لإعطاء إيحاء للحركة.</p>
+                        <p><strong>صيغ الملفات المدعومة:</strong></p>
+                        <ul class="list-disc list-inside pr-4 space-y-1">
+                            <li><strong>الصور:</strong> PNG (شفافة)، JPG/JPEG.</li>
+                            <li><strong>الأصوات:</strong> MP3, WAV.</li>
+                        </ul>
+                    </div>
+                `
+            },
+            4: {
+                title: 'تصنيفات اللبنات البرمجية ووظائفها (ص 139 - 152)',
+                summary: `
+                    <div class="space-y-2">
+                        <p><strong>اللبنات البرمجية (Blocks):</strong> أوامر جاهزة مصنفة حسب اللون:</p>
+                        <ul class="list-disc list-inside pr-4 space-y-1">
+                            <li><strong class="text-blue-400">الحركة (Motion):</strong> تحريك الكائن وتدويره.</li>
+                            <li><strong class="text-purple-400">الهيئة (Looks):</strong> تغيير المظهر والحديث والتكبير.</li>
+                            <li><strong class="text-pink-400">الصوت (Sound):</strong> تشغيل الألحان والتأثيرات.</li>
+                            <li><strong class="text-amber-400">الأحداث (Events):</strong> نقطة انطلاق البرنامج (مثل عند نُقر العلم).</li>
+                            <li><strong class="text-amber-500">التحكم (Control):</strong> حلقة التكرار والشروط وتأخير الوقت.</li>
+                        </ul>
+                    </div>
+                `
+            },
+            5: {
+                title: 'التتابع والمتغيرات في سكراتش (ص 153 - 168)',
+                summary: `
+                    <div class="space-y-2">
+                        <p><strong>مفهوم التتابع (Sequencing):</strong> تنفيذ الأوامر البرمجية خطوة تلو الأخرى بالترتيب من الأعلى للأسفل.</p>
+                        <p><strong>المتغير (Variable):</strong> مكان مخصص في ذاكرة الحاسوب لتخزين قيمة رقمية أو نصية قابلة للتغيير أثناء تشغيل البرنامج (مثل Score).</p>
+                        <p><strong>أوامر المتغيرات:</strong> اجعل (Set)، غير بمقدار (Change by)، إظهار/إخفاء المتغير.</p>
+                    </div>
+                `
+            },
+            6: {
+                title: 'الجمل الشرطية وحلقات التكرار (ص 169 - 184)',
+                summary: `
+                    <div class="space-y-2">
+                        <p><strong>الجمل الشرطية (Conditionals):</strong> اتخاذ قرار بناءً على شرط صح أو خطأ:</p>
+                        <ul class="list-disc list-inside pr-4 space-y-1">
+                            <li>لبنة <code class="bg-amber-950 text-amber-300 px-1 rounded">إذا ... فإن (If ... Then)</code></li>
+                            <li>لبنة <code class="bg-amber-950 text-amber-300 px-1 rounded">إذا ... فإن ... وإلا (If ... Then ... Else)</code></li>
+                        </ul>
+                        <p><strong>حلقات التكرار (Loops):</strong> إعادة تنفيذ مجموعة لبنات:</p>
+                        <ul class="list-disc list-inside pr-4 space-y-1">
+                            <li><strong>كرر (Repeat n):</strong> تكرار بعدد محدد.</li>
+                            <li><strong>استمر للأبد (Forever):</strong> تكرار غير منتهٍ.</li>
+                            <li><strong>كرر حتى (Repeat Until):</strong> تكرار يتوقف عند تحقق شرط.</li>
+                        </ul>
+                    </div>
+                `
+            }
+        };
+
+        function openLessonModal(id) {
+            playSound('click');
+            const data = lessonsData[id];
+            document.getElementById('modal-lesson-number').innerText = `الدرس ${id}`;
+            document.getElementById('modal-lesson-title').innerText = data.title;
+            document.getElementById('modal-lesson-body').innerHTML = data.summary;
+            document.getElementById('lesson-modal').classList.remove('hidden');
+        }
+
+        function closeLessonModal() {
+            playSound('click');
+            document.getElementById('lesson-modal').classList.add('hidden');
+        }
+
+        function completeQuest(id, xpVal) {
+            if (state.completedQuests.includes(id)) {
+                return;
+            }
+            state.completedQuests.push(id);
+            addXP(xpVal);
+            playSound('success');
+
+            const btn = document.getElementById(`quest-btn-${id}`);
+            btn.className = 'bg-slate-800 text-emerald-400 border border-emerald-500/40 text-xs font-bold px-3 py-1.5 rounded-lg cursor-default';
+            btn.innerText = '✓ تم كسب الـ XP';
+
+            const badge = document.getElementById(`quest-badge-${id}`);
+            badge.className = 'text-xs text-emerald-400 bg-emerald-950 border border-emerald-800 px-2 py-0.5 rounded-full';
+            badge.innerHTML = '<i class="fa-solid fa-check"></i> مكتمل';
+
+            checkBadgeUnlock();
+        }
+
+        /* HOTSPOT EXPLORER LOGIC */
+        const hotspotsData = {
+            menu: {
+                title: 'شريط القوائم والأدوات (Menu Bar)',
+                sub: 'يحتوي على إعدادات المشروع الأساسية',
+                desc: 'يتيح اختيار لغة الواجهة (مثل العربية)، قائمة (ملف File) للفتح والحفظ والتصدير، وقائمة (تحرير Edit) لاستعادة العناصر المحذوفة، بالإضافة لخانه تسمية المشروع.'
+            },
+            palette: {
+                title: 'لوحة اللبنات البرمجية (Blocks Palette)',
+                sub: 'تصنيفات الأوامر ملونة حسب الوظيفة',
+                desc: 'تنقسم إلى 9 فئات ملونة (الحركة، الهيئة، الصوت، الأحداث، التحكم، الاستشعار، العمليات، المتغيرات، اللبنات الإضافية)، حيث تحتوي كل فئة على اللبنات الخاصة بها.'
+            },
+            scripts: {
+                title: 'منطقة البرمجة (Scripts Area)',
+                sub: 'حيز تجميع وبناء المقاطع البرمجية',
+                desc: 'تُسحب اللبنات من اللوحة وتُفلت هنا لتلتصق ببعضها لتشكيل خوارزمية البرنامج، وتضم في الزاوية السفلية أدوات تكبير وتصغير وإعادة ضبط الحجم.'
+            },
+            stage: {
+                title: 'منصة العرض (Stage)',
+                sub: 'الشاشة التفاعلية لعرض المخرجات',
+                desc: 'منطقة ذات بعدين سينية وصادية (أبعادها 480 × 360 نقطة). يتحرك عليها الكائن وتظهر عليها الأشكال والنصوص. تعلوها شريط التشغيل (العلم الأخضر 🚩 للإبداء والأحمر للإيقاف 🛑).'
+            },
+            sprites: {
+                title: 'لوحة الكائنات والخلفيات (Sprite List & Backdrops)',
+                sub: 'إدارة العناصر البصرية في المشهد',
+                desc: 'تعرض جميع الكائنات المضافة للمشروع مع خصائصها (الاسم، الموقع X/Y، الإظهار، الحجم، الاتجاه)، بالإضافة لزر اختيار خلفية جديدة للمنصة.'
+            }
+        };
+
+        function showHotspotInfo(key) {
+            playSound('click');
+            const info = hotspotsData[key];
+            document.getElementById('hotspot-title').innerText = info.title;
+            document.getElementById('hotspot-sub').innerText = info.sub;
+            document.getElementById('hotspot-desc').innerText = info.desc;
+        }
+
+        function setExplorerMode(mode) {
+            playSound('click');
+            if (mode === 'ui') {
+                document.getElementById('explorer-ui-container').classList.remove('hidden');
+                document.getElementById('explorer-sim-container').classList.add('hidden');
+                document.getElementById('btn-mode-ui').className = 'bg-amber-500 text-slate-950 font-bold text-xs px-3 py-2 rounded-lg transition';
+                document.getElementById('btn-mode-sim').className = 'bg-slate-800 text-slate-300 hover:text-white font-bold text-xs px-3 py-2 rounded-lg transition';
+            } else {
+                document.getElementById('explorer-ui-container').classList.add('hidden');
+                document.getElementById('explorer-sim-container').classList.remove('hidden');
+                document.getElementById('btn-mode-sim').className = 'bg-amber-500 text-slate-950 font-bold text-xs px-3 py-2 rounded-lg transition';
+                document.getElementById('btn-mode-ui').className = 'bg-slate-800 text-slate-300 hover:text-white font-bold text-xs px-3 py-2 rounded-lg transition';
+            }
+        }
+
+        /* LIVE SCRATCH SIMULATOR ENGINE */
+        const simState = {
+            posX: 0,
+            posY: 0,
+            angle: 0,
+            scale: 1,
+            score: 0,
+            spriteIcon: '🐱',
+            scriptQueue: [],
+            isBgSpace: false
+        };
+
+        const simBlockLabels = {
+            move: 'تحرك 20 خطوة',
+            turnRight: 'استدر ↻ 15 درجة',
+            resetPos: 'اذهب للمركز (0,0)',
+            sayHello: 'قل [مرحباً بك!]',
+            changeCostume: 'المظهر التالي',
+            changeSize: 'تكبير الحجم +10',
+            playSound: 'شغّل صوت مواء 🐱',
+            addScore: 'غير [النقاط] بمقدار +5',
+            bgNext: 'الخلفية التالية 🌄'
+        };
+
+        function simAddBlock(type) {
+            playSound('click');
+            simState.scriptQueue.push(type);
+            renderSimScriptQueue();
+        }
+
+        function simClearScript() {
+            playSound('click');
+            simState.scriptQueue = [];
+            renderSimScriptQueue();
+        }
+
+        function renderSimScriptQueue() {
+            const queueContainer = document.getElementById('sim-script-queue');
+            queueContainer.innerHTML = '<div class="scratch-block block-events text-xs">عند نُقر 🚩 (بداية)</div>';
+            simState.scriptQueue.forEach((blockType, idx) => {
+                let colorClass = 'block-motion';
+                if (blockType.includes('say') || blockType.includes('Costume') || blockType.includes('Size')) colorClass = 'block-looks';
+                if (blockType.includes('Sound')) colorClass = 'block-sound';
+                if (blockType.includes('Score')) colorClass = 'block-variables';
+                if (blockType.includes('bg')) colorClass = 'block-events';
+
+                const div = document.createElement('div');
+                div.className = `scratch-block ${colorClass} text-xs mr-2 flex items-center justify-between gap-3 w-full max-w-[240px]`;
+                div.innerHTML = `<span>${simBlockLabels[blockType]}</span> <button onclick="simRemoveBlock(${idx})" class="text-red-300 hover:text-white text-[10px]">✕</button>`;
+                queueContainer.appendChild(div);
+            });
+        }
+
+        function simRemoveBlock(index) {
+            simState.scriptQueue.splice(index, 1);
+            renderSimScriptQueue();
+        }
+
+        async function simRunScript() {
+            if (simState.scriptQueue.length === 0) {
+                // Default step
+                simAddBlock('move');
+                simAddBlock('sayHello');
+            }
+
+            playSound('success');
+            for (let b of simState.scriptQueue) {
+                await new Promise(r => setTimeout(r, 400));
+                executeSingleSimBlock(b);
+            }
+        }
+
+        function executeSingleSimBlock(type) {
+            const sprite = document.getElementById('sim-sprite');
+            const bubble = document.getElementById('sim-sprite-bubble');
+
+            if (type === 'move') {
+                const rad = (simState.angle * Math.PI) / 180;
+                simState.posX += Math.cos(rad) * 25;
+                simState.posY += Math.sin(rad) * 15;
+            } else if (type === 'turnRight') {
+                simState.angle = (simState.angle + 15) % 360;
+            } else if (type === 'resetPos') {
+                simState.posX = 0;
+                simState.posY = 0;
+                simState.angle = 0;
+            } else if (type === 'sayHello') {
+                document.getElementById('sim-bubble-text').innerText = 'مرحباً بك في مدرسة وادي السير!';
+                bubble.classList.remove('hidden');
+                setTimeout(() => bubble.classList.add('hidden'), 2000);
+            } else if (type === 'changeCostume') {
+                const icons = ['🐱', '😸', '😻', '😺'];
+                const nextIdx = (icons.indexOf(simState.spriteIcon) + 1) % icons.length;
+                simState.spriteIcon = icons[nextIdx] || '🐱';
+                document.getElementById('sim-sprite-icon').innerText = simState.spriteIcon;
+            } else if (type === 'changeSize') {
+                simState.scale = simState.scale >= 1.5 ? 1 : simState.scale + 0.15;
+            } else if (type === 'playSound') {
+                playSound('meow');
+            } else if (type === 'addScore') {
+                simState.score += 5;
+                document.getElementById('sim-var-score').innerText = simState.score;
+            } else if (type === 'bgNext') {
+                simSetBg(simState.isBgSpace ? 'forest' : 'space');
+            }
+
+            // Update CSS transform
+            sprite.style.transform = `translate(${simState.posX}px, ${-simState.posY}px) rotate(${simState.angle}deg) scale(${simState.scale})`;
+            
+            // Position bubble near sprite
+            bubble.style.transform = `translate(${simState.posX}px, ${-simState.posY - 50}px)`;
+
+            // Update UI coordinates
+            document.getElementById('sim-pos-x').innerText = Math.round(simState.posX);
+            document.getElementById('sim-pos-y').innerText = Math.round(simState.posY);
+            document.getElementById('sim-pos-deg').innerText = `${simState.angle}°`;
+        }
+
+        function simStopScript() {
+            playSound('click');
+            document.getElementById('sim-sprite-bubble').classList.add('hidden');
+        }
+
+        function simSetSprite(icon) {
+            playSound('click');
+            simState.spriteIcon = icon;
+            document.getElementById('sim-sprite-icon').innerText = icon;
+        }
+
+        function simSetBg(type) {
+            playSound('click');
+            const stageBox = document.getElementById('sim-stage-box');
+            if (type === 'space') {
+                simState.isBgSpace = true;
+                stageBox.className = 'w-full h-72 rounded-2xl border-2 border-indigo-500 relative overflow-hidden flex items-center justify-center transition-all bg-gradient-to-b from-slate-950 via-indigo-950 to-slate-900 shadow-inner';
+            } else if (type === 'forest') {
+                simState.isBgSpace = false;
+                stageBox.className = 'w-full h-72 rounded-2xl border-2 border-emerald-500 relative overflow-hidden flex items-center justify-center transition-all bg-gradient-to-b from-emerald-950 via-teal-950 to-slate-900 shadow-inner';
+            } else {
+                simState.isBgSpace = false;
+                stageBox.className = 'w-full h-72 rounded-2xl border-2 border-slate-700 relative overflow-hidden flex items-center justify-center transition-all bg-slate-950 bg-grid-pattern shadow-inner';
+            }
+        }
+
+        /* GAMIFIED BLOCK LOGIC PUZZLES DATA */
+        const puzzlesData = [
+            {
+                title: 'التحدي 1: تتبع قيمة المتغير (Variable Tracing)',
+                question: 'إذا بدأ البرنامج بالبنة: [اجعل x مساوياً 5] ثم تلتها لبنة: [غير x بمقدار 3] ثم داخل حلقة [كرر 2 مرة] وضعنا [غير x بمقدار 2]، فما القيمة النهائية للمتغير x؟',
+                options: ['8', '10', '12', '14'],
+                correct: 2,
+                exp: 'البداية x=5 -> تغيير +3 يجعله 8 -> التكرار مرتين لإضافة 2 يجعلها (8 + 2 + 2 = 12).'
+            },
+            {
+                title: 'التحدي 2: تمييز لون وفئة اللبنة',
+                question: 'أي من اللبنات التالية تتبع لفئة "الأحداث Events" وتكون باللون الأصفر/الذهبي؟',
+                options: ['تحرك 10 خطوات', 'عند نُقر 🚩', 'قل مرحباً لمدة 2 ثانية', 'اجعل النقاط = 0'],
+                correct: 1,
+                exp: 'لبنة (عند نُقر العلم الأخضر) هي لبنة بدء الأحداث وتأتي باللون الذهبي/الأصفر.'
+            },
+            {
+                title: 'التحدي 3: تحليل الجمل الشرطية (Conditionals)',
+                question: 'في المقطع الشرطي: [إذا <النقاط > 10> فإن [شغل صوت فوز] وإلا [قل حاول ثانية]]. إذا كانت قيمة المتغير النقاط تساوي 7، ما الذي سيحدث؟',
+                options: ['سيتم تشغيل صوت الفوز', 'سيتم طباعة "حاول ثانية"', 'لن يحدث أي شيء', 'سيتم زيادة النقاط تلقائياً'],
+                correct: 1,
+                exp: 'بما أن الشرط (7 > 10) خاطئ، سيتم تنفيذ الأوامر الموجودة في قسم "و وإلا" أي طباعة "حاول ثانية".'
+            },
+            {
+                title: 'التحدي 4: عدد مرات التكرار (Loops Count)',
+                question: 'كم مرة ستنفذ اللبنة المكتوبة داخل المقطع البرمجي: [كرر 4 [ كرر 2 [تحرك 5 خطوات] ] ] ؟',
+                options: ['6 مرات', '8 مرات', '4 مرات', '16 مرة'],
+                correct: 1,
+                exp: 'تكرار خارجي (4 مرات) مضروباً بتكرار داخلي (مرتان) = 4 × 2 = 8 مرات.'
+            },
+            {
+                title: 'التحدي 5: عناصر التصميم والصيغ',
+                question: 'أراد طالب حفظ صورة كائن بحيث تكون خلفيته شفافة لاستخدامه في سكراتش، ما أفضل صيغة ملف يجب استخدامها؟',
+                options: ['MP3', 'PNG', 'WAV', 'TXT'],
+                correct: 1,
+                exp: 'صيغة PNG هي الصيغة الرسومية التي تدعم الشفافية (Transparency) لعدم إخفاء خلفية المنصة.'
+            }
+        ];
+
+        function initPuzzles() {
+            renderPuzzle();
+        }
+
+        function renderPuzzle() {
+            const puzzle = puzzlesData[state.puzzleIndex];
+            document.getElementById('challenge-step-num').innerText = `${state.puzzleIndex + 1} / ${puzzlesData.length}`;
+            document.getElementById('challenge-score').innerText = `${state.puzzleScore} XP`;
+
+            const box = document.getElementById('puzzle-box');
+            box.innerHTML = `
+                <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-4">
+                    <h4 class="text-base font-bold text-amber-300">${puzzle.title}</h4>
+                    <p class="text-sm text-slate-200 leading-relaxed">${puzzle.question}</p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                        ${puzzle.options.map((opt, i) => `
+                            <button onclick="checkPuzzleAnswer(${i})" id="popt-${i}" class="bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-amber-500 text-slate-200 p-3 rounded-xl text-xs font-bold text-right transition flex items-center gap-2">
+                                <span class="w-6 h-6 rounded-lg bg-slate-800 text-amber-400 flex items-center justify-center shrink-0 border border-slate-700">${i+1}</span>
+                                <span>${opt}</span>
+                            </button>
+                        `).join('')}
+                    </div>
+
+                    <div id="puzzle-feedback" class="hidden p-3 rounded-xl text-xs font-bold leading-relaxed"></div>
+                </div>
+            `;
+
+            // Disable / Enable buttons
+            document.getElementById('puzzle-prev-btn').disabled = (state.puzzleIndex === 0);
+            document.getElementById('puzzle-prev-btn').style.opacity = (state.puzzleIndex === 0) ? '0.5' : '1';
+        }
+
+        function checkPuzzleAnswer(selected) {
+            const puzzle = puzzlesData[state.puzzleIndex];
+            const fb = document.getElementById('puzzle-feedback');
+            fb.classList.remove('hidden');
+
+            // Disable options
+            for (let i = 0; i < puzzle.options.length; i++) {
+                const btn = document.getElementById(`popt-${i}`);
+                btn.disabled = true;
+                if (i === puzzle.correct) {
+                    btn.className = 'bg-emerald-950 border-2 border-emerald-500 text-emerald-200 p-3 rounded-xl text-xs font-bold text-right flex items-center gap-2';
+                } else if (i === selected) {
+                    btn.className = 'bg-red-950 border-2 border-red-500 text-red-200 p-3 rounded-xl text-xs font-bold text-right flex items-center gap-2';
+                }
+            }
+
+            if (selected === puzzle.correct) {
+                playSound('success');
+                state.puzzleScore += 50;
+                addXP(50);
+                fb.className = 'p-3 rounded-xl text-xs font-bold leading-relaxed bg-emerald-950/80 border border-emerald-500/40 text-emerald-300';
+                fb.innerHTML = `✓ إجابة صحيحة كسبت +50 XP! <br><span class="text-slate-300 font-normal">${puzzle.exp}</span>`;
+            } else {
+                playSound('wrong');
+                fb.className = 'p-3 rounded-xl text-xs font-bold leading-relaxed bg-red-950/80 border border-red-500/40 text-red-300';
+                fb.innerHTML = `✗ إجابة خاطئة! <br><span class="text-slate-300 font-normal">${puzzle.exp}</span>`;
+            }
+            document.getElementById('challenge-score').innerText = `${state.puzzleScore} XP`;
+        }
+
+        function nextPuzzle() {
+            playSound('click');
+            if (state.puzzleIndex < puzzlesData.length - 1) {
+                state.puzzleIndex++;
+                renderPuzzle();
+            } else {
+                // Completed all puzzles
+                playSound('success');
+                alertToast('🎉 تهانينا! أكملت جميع أغاز التحدي بنجاح!');
+            }
+        }
+
+        function prevPuzzle() {
+            playSound('click');
+            if (state.puzzleIndex > 0) {
+                state.puzzleIndex--;
+                renderPuzzle();
+            }
+        }
+
+        /* UNIT QUIZ DATA & LOGIC */
+        const quizData = [
+            {
+                q: "1. برمجية سكراتش (Scratch) هي لغة برمجة نصية مثل Python و Java.",
+                type: "tf",
+                options: ["صواب", "خطأ"],
+                ans: 1,
+                explanation: "سكراتش هي لغة برمجة رسومية (Visual Block-based) تعتمد على تجميع اللبنات وليست نصية."
+            },
+            {
+                q: "2. ما أبعاد المنصة (Stage) في برمجية سكراتش 3.0؟",
+                type: "mcq",
+                options: ["X: -100 to 100, Y: -100 to 100", "X: -240 to 240, Y: -180 to 180", "X: 0 to 500, Y: 0 to 500", "X: -500 to 500, Y: -500 to 500"],
+                ans: 1,
+                explanation: "أبعاد المنصة القياسية في سكراتش هي 480 عرضاً (-240 إلى +240) و360 ارتفاعاً (-180 إلى +180)."
+            },
+            {
+                q: "3. اللبنة المسؤولة عن بدء تنفيذ المقطع البرمجي عند ضغط الزر الأخضر هي من فئة:",
+                type: "mcq",
+                options: ["الحركة (Motion)", "الهيئة (Looks)", "الأحداث (Events)", "التحكم (Control)"],
+                ans: 2,
+                explanation: "فئة الأحداث (Events) باللون الذهبي تحتوي على لبنات البدء كـ [عند نُقر العلم الأخضر]."
+            },
+            {
+                q: "4. يمكن إضافة صوت للمشروع بسكراتش بصيغة MP3 أو WAV فقط.",
+                type: "tf",
+                options: ["صواب", "خطأ"],
+                ans: 0,
+                explanation: "صحيح، سكراتش يدعم الملفات الصوتية الشائعة بصيغة MP3 و WAV."
+            },
+            {
+                q: "5. لتغيير شكل الكائن وإظهار حركات مختلفة له نستخدم مكتبة:",
+                type: "mcq",
+                options: ["الخلفيات (Backdrops)", "المظاهر (Costumes)", "المتغيرات (Variables)", "العمليات (Operators)"],
+                ans: 1,
+                explanation: "المظاهر (Costumes) تتيح تبديل صور وشكل الكائن لنفس العناصر."
+            },
+            {
+                q: "6. اللبنة الشرطية (If ... Then ... Else) تُنفذ قسم (Else / وإلا) عندما يكون الشرط صواباً.",
+                type: "tf",
+                options: ["صواب", "خطأ"],
+                ans: 1,
+                explanation: "خطأ، قسم (Else / وإلا) يُنفذ فقط إذا كان الشرط خـاطئاً (False)."
+            },
+            {
+                q: "7. أي من اللبنات التالية تُستخدم لتكرار الأوامر لعدد غير محدد حتى يوقف المستخدم البرنامج؟",
+                type: "mcq",
+                options: ["كرر (Repeat)", "استمر للأبد (Forever)", "كرر حتى (Repeat Until)", "انتظر (Wait)"],
+                ans: 1,
+                explanation: "لبنة (استمر للأبد Forever) تكرر المقاطع بلا نهاية حتى يتم ضغط زر الإيقاف الأحمر."
+            },
+            {
+                q: "8. المفهوم البرمجي الذي يعني تنفيذ الأوامر خطوة تلو الأخرى بالتتابع هو:",
+                type: "mcq",
+                options: ["التكرار (Looping)", "التتابع (Sequencing)", "الاختيار الشرطي (Selection)", "الاستشعار (Sensing)"],
+                ans: 1,
+                explanation: "التتابع (Sequencing) هو تسلسل تنفيذ الأوامر بالترتيب التنازلي."
+            },
+            {
+                q: "9. يتم تخزين النقاط والأسماء أثناء تشغيل البرنامج داخل:",
+                type: "mcq",
+                options: ["المتغيرات (Variables)", "المنصة (Stage)", "المظاهر (Costumes)", "الاستشعار (Sensing)"],
+                ans: 0,
+                explanation: "المتغير (Variable) هو حيز في الذاكرة لتخزين القيم المتغيرة."
+            },
+            {
+                q: "10. تتيح برمجية سكراتش مشاركة المشاريع وتطوير مشاريع الآخرين مع مراعاة المواطنة الرقمية.",
+                type: "tf",
+                options: ["صواب", "خطأ"],
+                ans: 0,
+                explanation: "صحيح، مشاركة الأعمال جزء أساسي من مجتمع سكراتش مع نسب الفضل لأصحابه."
+            }
+        ];
+
+        function renderQuizQuestions() {
+            const container = document.getElementById('quiz-questions-container');
+            container.innerHTML = quizData.map((q, idx) => `
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
+                    <p class="text-xs sm:text-sm font-bold text-slate-100">${q.q}</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                        ${q.options.map((opt, oIdx) => `
+                            <label class="bg-slate-900 hover:bg-slate-800 border border-slate-800 p-2.5 rounded-lg flex items-center gap-2 cursor-pointer transition text-slate-300">
+                                <input type="radio" name="q_${idx}" value="${oIdx}" class="accent-amber-500">
+                                <span>${opt}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                    <div id="q-ans-fb-${idx}" class="hidden text-[11px] p-2.5 rounded-lg font-bold"></div>
+                </div>
+            `).join('');
+        }
+
+        function submitUnitQuiz(e) {
+            e.preventDefault();
+            playSound('success');
+
+            let score = 0;
+            quizData.forEach((q, idx) => {
+                const selected = document.querySelector(`input[name="q_${idx}"]:checked`);
+                const fb = document.getElementById(`q-ans-fb-${idx}`);
+                fb.classList.remove('hidden');
+
+                if (selected && parseInt(selected.value) === q.ans) {
+                    score++;
+                    fb.className = 'text-[11px] p-2.5 rounded-lg font-bold bg-emerald-950/80 border border-emerald-500/40 text-emerald-300';
+                    fb.innerHTML = `✓ إجابة صحيحة! (${q.explanation})`;
+                } else {
+                    fb.className = 'text-[11px] p-2.5 rounded-lg font-bold bg-red-950/80 border border-red-500/40 text-red-300';
+                    fb.innerHTML = `✗ إجابة خاطئة! الإجابة الصحيحة: ${q.options[q.ans]} - ${q.explanation}`;
+                }
+            });
+
+            const finalXP = score * 20;
+            addXP(finalXP);
+            
+            document.getElementById('quiz-result-tag').innerText = `النتيجة: ${score} / 10 (${score * 10}%)`;
+            alertToast(`👍 أتممت الاختبار بنجاح! حصلت على ${score * 10}% وكسبت ${finalXP} XP!`);
+
+            // Update Certificate Grade
+            let gradeStr = 'مقبول';
+            if (score >= 9) gradeStr = 'ممتاز 🌟';
+            else if (score >= 7) gradeStr = 'جيد جداً ⚡';
+            else if (score >= 5) gradeStr = 'جيد 👍';
+            document.getElementById('cert-grade-val').innerText = gradeStr;
+        }
+
+        function resetUnitQuiz() {
+            playSound('click');
+            document.getElementById('unit-quiz-form').reset();
+            quizData.forEach((_, idx) => {
+                const fb = document.getElementById(`q-ans-fb-${idx}`);
+                fb.classList.add('hidden');
+            });
+            document.getElementById('quiz-result-tag').innerText = '10 أسئلة';
+        }
+
+        function saveSelfCheck() {
+            playSound('success');
+            addXP(30);
+            alertToast('تم حفظ نتائج التقييم الذاتي وكسب +30 XP!');
+        }
+
+        /* BADGES & ACHIEVEMENTS */
+        const badgesData = [
+            { id: 1, name: 'المستكشف الأول', icon: '🌟', req: 'أكمل الدرس الأول' },
+            { id: 2, name: 'صديق سكراتش', icon: '🐱', req: 'شغل المحاكي المباشر' },
+            { id: 3, name: 'بطل المتغيرات', icon: '⚡', req: 'حل لغز المتغيرات' },
+            { id: 4, name: 'مهندس التكرار', icon: '🧩', req: 'أكمل جميع المهمات' },
+            { id: 5, name: 'خبير البرمجة', icon: '🎓', req: 'احصل على 500 XP' }
+        ];
+
+        function renderBadges() {
+            const container = document.getElementById('badges-container');
+            container.innerHTML = badgesData.map(b => {
+                const unlocked = state.xp >= (b.id * 80);
+                return `
+                    <div class="${unlocked ? 'bg-amber-950/40 border-amber-500/50 text-amber-300' : 'bg-slate-950 border-slate-800 text-slate-600 opacity-60'} p-3 rounded-xl border text-center space-y-1">
+                        <div class="text-3xl">${b.icon}</div>
+                        <div class="text-xs font-bold">${b.name}</div>
+                        <div class="text-[10px] ${unlocked ? 'text-amber-400' : 'text-slate-500'}">${unlocked ? 'مكتسبة ✓' : b.req}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function checkBadgeUnlock() {
+            renderBadges();
+        }
+
+        /* CERTIFICATE NAME UPDATER */
+        function updateCertificateName() {
+            const val = document.getElementById('student-name-input').value.trim();
+            document.getElementById('cert-student-name').innerText = val.length > 0 ? val : '(اسم الطالب المبدع)';
+        }
+
+        /* GITHUB PAGES MODAL HANDLERS */
+        function openGitHubModal() {
+            playSound('click');
+            document.getElementById('github-modal').classList.remove('hidden');
+        }
+
+        function closeGitHubModal() {
+            playSound('click');
+            document.getElementById('github-modal').classList.add('hidden');
+        }
+
+        /* CUSTOM TOAST NOTIFICATION */
+        function alertToast(msg) {
+            const toast = document.createElement('div');
+            toast.className = 'fixed bottom-5 left-5 bg-amber-500 text-slate-950 font-black text-xs px-4 py-3 rounded-xl shadow-2xl z-50 animate-bounce flex items-center gap-2 border border-amber-300';
+            toast.innerHTML = `<i class="fa-solid fa-bell"></i> <span>${msg}</span>`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+
+        /* LOCAL STORAGE PERSISTENCE */
+        function saveProgress() {
+            try {
+                localStorage.setItem('scratch_g8_state', JSON.stringify({
+                    xp: state.xp,
+                    level: state.level,
+                    completedQuests: state.completedQuests
+                }));
+            } catch(e){}
+        }
+
+        function loadSavedProgress() {
+            try {
+                const saved = localStorage.getItem('scratch_g8_state');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    state.xp = parsed.xp || 0;
+                    state.level = parsed.level || 1;
+                    state.completedQuests = parsed.completedQuests || [];
+                    
+                    // Mark completed quests UI
+                    state.completedQuests.forEach(id => {
+                        const btn = document.getElementById(`quest-btn-${id}`);
+                        if (btn) {
+                            btn.className = 'bg-slate-800 text-emerald-400 border border-emerald-500/40 text-xs font-bold px-3 py-1.5 rounded-lg cursor-default';
+                            btn.innerText = '✓ تم كسب الـ XP';
+                        }
+                        const badge = document.getElementById(`quest-badge-${id}`);
+                        if (badge) {
+                            badge.className = 'text-xs text-emerald-400 bg-emerald-950 border border-emerald-800 px-2 py-0.5 rounded-full';
+                            badge.innerHTML = '<i class="fa-solid fa-check"></i> مكتمل';
+                        }
+                    });
+                }
+            } catch(e){}
+        }
+
+    </script>
+</body>
+</html>
